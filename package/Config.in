@@ -1,0 +1,5 @@
+config BR2_PACKAGE_COMBINATIONLOCK
+    bool "combination-lock"
+    depends on BR2_PACKAGE_WIRINGPI
+    help
+      Combination lock using wiringpi
