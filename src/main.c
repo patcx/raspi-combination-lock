@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <errno.h>
+#include <pthread.h>
 #include "gpioMapping.h"
 #include "states.h"
 
@@ -17,6 +18,8 @@ int SET_PASSWORD[PASSWORD_LENGTH];
 int PASSWORD[PASSWORD_LENGTH];
 int BUTTONS_STATE[3];
 int STATE = UNLOCKED;
+pthread_cond_t CONDITION = PTHREAD_COND_INITIALIZER;;
+pthread_mutex_t MUTEX = PTHREAD_MUTEX_INITIALIZER;;
 
 void sethandler( void (*f)(int), int sigNo) {
         struct sigaction act;
@@ -27,7 +30,7 @@ void sethandler( void (*f)(int), int sigNo) {
 
 void shutdown_handler(int sigNo){
     printf("\n");
-    IS_RUNNING = 0;       
+    pthread_cond_signal(&CONDITION);    
 }
 
 void initializePins(){
@@ -232,6 +235,7 @@ void Button3Pressed(){
 int main(){
 
     printf("Application started!\n");
+
     sethandler(shutdown_handler, SIGINT);
 
     if(wiringPiSetupGpio () < 0)
@@ -247,10 +251,7 @@ int main(){
         ERR("wiringPiISR error for button 3\n");
     
     update();
-    while(IS_RUNNING)
-    {
-        
-    }
+    pthread_cond_wait(&CONDITION, &MUTEX);
 
     digitalWrite (LED_RED, LOW);
     digitalWrite (LED_GREEN, LOW);
