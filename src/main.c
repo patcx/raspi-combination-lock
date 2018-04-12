@@ -30,7 +30,8 @@ void sethandler( void (*f)(int), int sigNo) {
 
 void shutdown_handler(int sigNo){
     printf("\n");
-    pthread_cond_signal(&CONDITION);    
+    if(pthread_cond_signal(&CONDITION) != 0)
+        ERR("pthread_cond_signal error");    
 }
 
 void initializePins(){
@@ -179,7 +180,8 @@ int main(){
         ERR("wiringPiISR error for button 3\n");
     
     update();
-    pthread_cond_wait(&CONDITION, &MUTEX);
+    if(pthread_cond_wait(&CONDITION, &MUTEX) != 0)
+        ERR("pthread_cond_wait error")
 
     digitalWrite (LED_RED, LOW);
     digitalWrite (LED_GREEN, LOW);
