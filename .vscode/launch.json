@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "gdb",
+            "request": "launch",
+            "name": "Launch Program (SSH + X11)",
+            "target": "./bin/executable",
+            "cwd": "${workspaceRoot}",
+            "ssh": {
+                "host": "192.168.0.15",
+                "cwd": "/tmp",
+                "keyfile": "/home/my_user/.ssh/id_rsa",
+                "user": "pi",
+                "forwardX11": true,
+                "x11host": "localhost",
+                "x11port": 6000
+            }
+        },
+    {
+        "type": "gdb",
+        "request": "attach",
+        "name": "Attach to gdbserver",
+        "executable": "./combination-lock",
+        "target": "192.168.0.15:4444",
+        "remote": true,
+        "cwd": "${workspaceRoot}"
+    },
+        {
+            "name": "Debug",
+            "type": "gdb",
+            "request": "launch",
+            "target": "./combination-lock",
+            "cwd": "${workspaceRoot}"
+        }
+    ]
+}
