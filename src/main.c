@@ -131,104 +131,32 @@ void buttonHandle(int number){
     update();
 }
 
+void Bounce(int button){
 
-void Button1Pressed();
-void Button2Pressed();
-void Button3Pressed();
-
-void Button1Released(){
-    piLock(0);     
-    if(BUTTONS_STATE[0] == 0)
-    {
-        piUnlock(0);   
-        return;
-    }
-
-    buttonHandle(1);
-    BUTTONS_STATE[0] = 0;
-    piUnlock(0);    
-    
-    if(wiringPiISR(BUTTON_1, INT_EDGE_RISING, Button1Pressed) < 0)
-        ERR("wiringPiISR error for button 1\n");
-
-}
-
-void Button2Released(){
-     piLock(1);     
-    if(BUTTONS_STATE[1] == 0)
-    {
-        piUnlock(1);   
-        return;
-    }
-    printf("Button2 Released\n");  
-    buttonHandle(2);
-    BUTTONS_STATE[1] = 0;
-    piUnlock(1);   
-    if(wiringPiISR(BUTTON_2, INT_EDGE_RISING, Button2Pressed) < 0)
-        ERR("wiringPiISR error for button 2\n");
-}
-
-void Button3Released(){
-    piLock(2);     
-    if(BUTTONS_STATE[2] == 0)
-    {
-        piUnlock(2);   
-        return;
-    }
-    printf("Button3 Released\n");   
-    buttonHandle(3);
-    BUTTONS_STATE[2] = 0;
-    piUnlock(2); 
-
-    if(wiringPiISR(BUTTON_3, INT_EDGE_RISING, Button3Pressed) < 0)
-        ERR("wiringPiISR error for button 3\n");
-
+    while(waitForInterrupt(button, 100) || (digitalRead(button) == HIGH)){
+        
+        }
 }
 
 void Button1Pressed(){
-    piLock(0);        
-    if(BUTTONS_STATE[0] == 1)
-    {
-        piUnlock(0);                 
-        return;
-    }
+    Bounce(BUTTON_1);    
 
-    BUTTONS_STATE[0] = 1;
-    piUnlock(0);          
-    
-    if(wiringPiISR(BUTTON_1, INT_EDGE_FALLING, Button1Released) < 0)
-        ERR("wiringPiISR error for button 1\n");
+    printf("Button 1 pressed..\n");    
+    buttonHandle(1);
 }
 
 void Button2Pressed(){
-    piLock(1);        
-    if(BUTTONS_STATE[1] == 1)
-    {
-        piUnlock(1);                 
-        return;
-    }
+    Bounce(BUTTON_2);       
 
-    BUTTONS_STATE[1] = 1;
-    piUnlock(1);         
-
-    if(wiringPiISR(BUTTON_2, INT_EDGE_FALLING, Button2Released) < 0)
-        ERR("wiringPiISR error for button 2\n");
+    printf("Button 2 pressed..\n");        
+    buttonHandle(2);       
 }
 
 void Button3Pressed(){
+    Bounce(BUTTON_3);
 
-    piLock(2);        
-    if(BUTTONS_STATE[2] == 1)
-    {
-        piUnlock(2);                 
-        return;
-    }
-
-    BUTTONS_STATE[2] = 1;
-    piUnlock(2);
-  
-    if(wiringPiISR(BUTTON_3, INT_EDGE_FALLING, Button3Released) < 0)
-        ERR("wiringPiISR error for button 3\n");
+    printf("Button 3 pressed..\n");        
+    buttonHandle(3); 
 }
 
 
@@ -243,11 +171,11 @@ int main(){
 
     initializePins();
 
-    if(wiringPiISR(BUTTON_1, INT_EDGE_RISING, Button1Pressed) < 0)
+    if(wiringPiISR(BUTTON_1, INT_EDGE_BOTH, Button1Pressed) < 0)
         ERR("wiringPiISR error for button 1\n");
-    if(wiringPiISR(BUTTON_2, INT_EDGE_RISING, Button2Pressed) < 0)
+    if(wiringPiISR(BUTTON_2, INT_EDGE_BOTH, Button2Pressed) < 0)
         ERR("wiringPiISR error for button 2\n");
-    if(wiringPiISR(BUTTON_3, INT_EDGE_RISING, Button3Pressed) < 0)
+    if(wiringPiISR(BUTTON_3, INT_EDGE_BOTH, Button3Pressed) < 0)
         ERR("wiringPiISR error for button 3\n");
     
     update();

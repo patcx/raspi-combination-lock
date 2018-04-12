@@ -5,4 +5,4 @@
 
 #define BUTTON_1 10
 #define BUTTON_2 22
-#define BUTTON_3 25
+#define BUTTON_3 27
